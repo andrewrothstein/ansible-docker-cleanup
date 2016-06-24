@@ -1,0 +1,2 @@
+---
+docker_cleanup_install_dir : /usr/local/bin

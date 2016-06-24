@@ -1,0 +1,12 @@
+[Unit]
+Description=Scheduler for docker-cleanup.service
+
+[Timer]
+# daily at 11pm local time
+OnCalendar=*-*-* 23:00:00
+
+# dont reschedule is missed - get em tomorrow
+Persistent=false
+
+[Install]
+WantedBy=timers.target

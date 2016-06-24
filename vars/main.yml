@@ -1,0 +1,6 @@
+---
+docker_cleanup_scripts:
+  - docker-rm-exited.sh
+  - docker-purge-dangling.sh
+  - docker-volume-purge.sh
+
