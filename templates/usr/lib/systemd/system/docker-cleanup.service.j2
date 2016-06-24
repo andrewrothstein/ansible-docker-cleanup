@@ -4,7 +4,7 @@ Description=Delinter for your Docker daemon
 [Service]
 Type=oneshot
 {% for s in docker_cleanup_scripts %}
-ExecStart={{docker_cleanup_install_dir}}/{{s}}
+ExecStart=-{{docker_cleanup_install_dir}}/{{s}}
 {% endfor %}
 User=root
 Group=docker
