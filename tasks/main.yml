@@ -1,14 +1,16 @@
 ---
 - name: installing {{item}}
+  become: yes
+  become_user: root
   with_items: '{{docker_cleanup_scripts}}'
   copy: >
     src={{item}}
     dest={{docker_cleanup_install_dir}}/{{item}}
-    owner=root
-    group=root
     mode=0755
 
 - name: install systemd timer/service
+  become: yes
+  become_user: root
   register: docker_cleanup_modified
   with_items:
     - docker-cleanup.timer
@@ -21,8 +23,12 @@
     mode=0644
 
 - name: systemctl daemon-reload
+  become: yes
+  become_user: root
   when: docker_cleanup_modified
   command: systemctl daemon-reload
 
 - name: launch timer
+  become: yes
+  become_user: root
   service: name=docker-cleanup.timer enabled=true state=started
