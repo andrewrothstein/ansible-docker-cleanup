@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+echo purging images with filter {{docker_cleanup_image_filter}}...
+docker images --filter="{{docker_cleanup_image_filter}}" --format "{{'{{'}} .ID {{'}}'}}" \
+       | xargs --no-run-if-empty docker rmi

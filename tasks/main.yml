@@ -3,9 +3,10 @@
   become: yes
   become_user: root
   with_items: '{{docker_cleanup_scripts}}'
-  copy: >
-    src={{item}}
-    dest={{docker_cleanup_install_dir}}/{{item}}
+  when: item.enabled
+  template: >-
+    src=usr/local/bin/{{item.script}}.j2
+    dest={{docker_cleanup_install_dir}}/{{item.script}}
     mode=0755
 
 - name: install systemd timer/services...
