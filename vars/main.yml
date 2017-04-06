@@ -7,4 +7,4 @@ docker_cleanup_scripts:
   - script: docker-volume-purge.sh
     enabled: "{{docker_cleanup_volume_purge}}"
   - script: docker-purge-filtered.sh
-    enabled: "{% if docker_cleanup_image_filter is defined %}True{% else %}False{% endif %}"
+    enabled: "{{docker_cleanup_image_filter is defined}}"

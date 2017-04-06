@@ -8,3 +8,5 @@ docker_cleanup_volume_purge: True
 # Set the following filter if you would like to delete all images using this filter
 # https://docs.docker.com/engine/reference/commandline/images/#/filtering
 #docker_cleanup_image_filter: 'label=Git.Project.Namespace=test'
+
+docker_cleanup_activate: True

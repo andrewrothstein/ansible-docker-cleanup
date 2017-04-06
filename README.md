@@ -1,29 +1,33 @@
+[![CircleCI](https://circleci.com/gh/andrewrothstein/ansible-docker-cleanup.svg?style=svg)](https://circleci.com/gh/andrewrothstein/ansible-docker-cleanup)
 andrewrothstein.docker-cleanup
 ==============================
 
-Role installs a bunch of useful shell scripts for purging Docker related images, containers, and volumes. Additionally schedules clean ups with systemd timers.
+* Installs a bunch of useful shell scripts for purging Docker related images, containers, and volumes
+* Schedules dangling image and exited container clean ups with systemd timers
 
 Requirements
 ------------
 
-See [meta/main.yml]
+See [meta/main.yml](meta/main.yml)
 
 Role Variables
 --------------
 
-See [defaults/main.yml]
+See [defaults/main.yml](defaults/main.yml)
 
 Dependencies
 ------------
 
-See [meta/main.yml]
+See [meta/main.yml](meta/main.yml)
 
 Example Playbook
 ----------------
 
-    - hosts: servers
-      roles:
-         - andrewrothstein.docker-cleanup
+```yml
+- hosts: servers
+  roles:
+    - andrewrothstein.docker-cleanup
+```
 
 License
 -------
@@ -33,4 +37,4 @@ MIT
 Author Information
 ------------------
 
-Andrew Rothstein andrew.rothstein@gmail.com
+Andrew Rothstein <andrew.rothstein@gmail.com>

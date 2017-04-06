@@ -4,10 +4,10 @@
   become_user: root
   with_items: '{{docker_cleanup_scripts}}'
   when: item.enabled
-  template: >-
-    src=usr/local/bin/{{item.script}}.j2
-    dest={{docker_cleanup_install_dir}}/{{item.script}}
-    mode=0755
+  template:
+    src: '{{item.script}}.j2'
+    dest: '{{item.d | default(docker_cleanup_install_dir)}}/{{item.script}}'
+    mode: 0755
 
 - name: install systemd timer/services...
   become: yes
@@ -16,18 +16,22 @@
   with_items:
     - docker-cleanup.timer
     - docker-cleanup.service
-  template: >-
-    src=usr/lib/systemd/system/{{item}}.j2
-    dest=/usr/lib/systemd/system/{{item}}
-    mode=0644
+  template:
+    src: '{{item}}.j2'
+    dest: /etc/systemd/system/{{item}}
+    mode: 0644
 
 - name: systemctl daemon-reload
   become: yes
   become_user: root
-  when: docker_cleanup_modified|changed
+  when: docker_cleanup_activate and docker_cleanup_modified|changed
   command: systemctl daemon-reload
 
 - name: launch timer
   become: yes
   become_user: root
-  service: name=docker-cleanup.timer enabled=true state=started
+  when: docker_cleanup_activate
+  service:
+    name: docker-cleanup.timer
+    enabled: true
+    state: started
