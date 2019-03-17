@@ -1,10 +1,10 @@
 ---
 docker_cleanup_scripts:
   - script: docker-rm-exited.sh
-    enabled: "{{docker_cleanup_rm_exited}}"
+    enabled: "{{ docker_cleanup_rm_exited }}"
   - script: docker-purge-dangling.sh
-    enabled: "{{docker_cleanup_purge_dangling}}"
+    enabled: "{{ docker_cleanup_purge_dangling }}"
   - script: docker-volume-purge.sh
-    enabled: "{{docker_cleanup_volume_purge}}"
+    enabled: "{{ docker_cleanup_volume_purge }}"
   - script: docker-purge-filtered.sh
-    enabled: "{{docker_cleanup_image_filter is defined}}"
+    enabled: "{{ docker_cleanup_image_filter is defined }}"
