@@ -1,9 +1,8 @@
-[![CircleCI](https://circleci.com/gh/andrewrothstein/ansible-docker-cleanup.svg?style=svg)](https://circleci.com/gh/andrewrothstein/ansible-docker-cleanup)
 andrewrothstein.docker-cleanup
 ==============================
+[![Build Status](https://travis-ci.org/andrewrothstein/ansible-docker-cleanup.svg?branch=master)](https://travis-ci.org/andrewrothstein/ansible-docker-cleanup)
 
-* Installs a bunch of useful shell scripts for purging Docker related images, containers, and volumes
-* Schedules dangling image and exited container clean ups with systemd timers
+Installs cron jobs to clean the docker daemon
 
 Requirements
 ------------
@@ -38,3 +37,4 @@ Author Information
 ------------------
 
 Andrew Rothstein <andrew.rothstein@gmail.com>
+[Victor Michel](https://github.com/vmichel95)

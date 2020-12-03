@@ -20,6 +20,7 @@ galaxy_info:
     - name: EL
       versions:
         - 7
+        - 8
     - name: Fedora
       versions:
         - 31
@@ -32,4 +33,6 @@ galaxy_info:
   galaxy_tags:
     - development
 
-dependencies: []
+dependencies:
+  - role: andrewrothstein.cron
+    version: v1.0.0
