@@ -1,38 +1,24 @@
 ---
-- name: installing cleanup scripts...
-  become: yes
-  become_user: root
-  with_items: '{{ docker_cleanup_scripts }}'
-  when: item.enabled
-  template:
-    src: '{{ item.script }}.j2'
-    dest: '{{ item.d | default(docker_cleanup_install_dir) }}/{{ item.script }}'
-    mode: 0755
+- name: compute prune command label filters
+  when: item is not none
+  set_fact:
+    docker_cleanup_label_command_filter_flags: '{{ docker_cleanup_label_command_filter_flags + [ ("value" in item) | ternary([item.name, item.equal | default(True) | ternary("=", "!="), item.value | default(omit)] | join(""), item.name) ] }}'
+  loop: '{{ query("list", docker_cleanup_label_filters) }}'
 
-- name: install systemd timer/services...
-  become: yes
-  become_user: root
-  register: docker_cleanup_modified
-  with_items:
-    - docker-cleanup.timer
-    - docker-cleanup.service
-  template:
-    src: '{{ item }}.j2'
-    dest: /etc/systemd/system/{{ item }}
-    mode: 0644
+- name: aggregate prune command filters
+  set_fact:
+    docker_cleanup_command_filter_flags_vector: '{{ docker_cleanup_command_filter_flags_vector + [ "--filter=%s" | format(item | tojson) ] }}'
+  loop: '{{ (docker_cleanup_label_command_filter_flags + [docker_cleanup_until_command_filter_flag]) | reject("eq", "") | list }}'
 
-- name: systemctl daemon-reload
+- name: configure docker object (:= {{ docker_cleanup_items | intersect(docker_cleanup_scoped_prune_commands.keys()) }} ) cleanup cron job
   become: yes
   become_user: root
-  when: docker_cleanup_activate and docker_cleanup_modified|changed
-  systemd:
-    daemon_reload: yes
-
-- name: launch timer
-  become: yes
-  become_user: root
-  when: docker_cleanup_activate
-  service:
-    name: docker-cleanup.timer
-    enabled: true
-    state: started
+  cron:
+    name: 'Docker Garbage Collection'
+    job: '{{ docker_cleanup_crond_job_command }}'
+    disabled: '{{ not docker_cleanup_crond_enabled }}'
+    month: '{{ docker_cleanup_crontab_schedule.month | default(omit) }}'
+    weekday: '{{ docker_cleanup_crontab_schedule.weekday | default(omit) }}'
+    day: '{{ docker_cleanup_crontab_schedule.day | default(omit) }}'
+    hour: '{{ docker_cleanup_crontab_schedule.hour | default(omit) }}'
+    minute: '{{ docker_cleanup_crontab_schedule.minute | default(omit) }}'
