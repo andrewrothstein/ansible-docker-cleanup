@@ -1,5 +1,4 @@
 ---
 - hosts: all
   roles:
-    - role: '{{playbook_dir}}'
-      docker_cleanup_activate: False
+    - role: '{{ playbook_dir }}'

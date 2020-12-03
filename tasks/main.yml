@@ -15,7 +15,7 @@
   become_user: root
   when: docker_cleanup_crond_enabled
   cron:
-    name: 'Docker Garbage Collection'
+    name: Docker Garbage Collection
     job: '{{ docker_cleanup_crond_job_command }}'
     disabled: '{{ not docker_cleanup_crond_enabled }}'
     month: '{{ docker_cleanup_crontab_schedule.month | default(omit) }}'
