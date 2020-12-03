@@ -1,6 +1,8 @@
 ---
 docker_cleanup_until_command_filter_flag: '{{ (docker_cleanup_until_filter is defined) | ternary("until=%s" | format(docker_cleanup_until_filter | default(None)), None) }}'
+docker_cleanup_label_command_filter_flags: []
 
+docker_cleanup_command_filter_flags_vector: []
 docker_cleanup_scoped_prune_commands:
   container: 'docker container prune --force {{ docker_cleanup_command_filter_flags_vector | join(" ") }}'
   image: 'docker image prune --force {{ ((docker_cleanup_image_prune_all | ternary(["--all"], [])) + docker_cleanup_command_filter_flags_vector) | join(" ") }}'

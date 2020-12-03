@@ -1,14 +1,14 @@
 ---
 - name: compute prune command label filters
-  when: docker_cleanup_label_filters | length > 0
+  when: item is not none
   set_fact:
-    docker_cleanup_label_command_filter_flags: '{{ (docker_cleanup_label_command_filter_flags | default([])) + [ ("value" in item) | ternary([item.name, item.equal | default(True) | ternary("=", "!="), item.value | default(omit)] | join(""), item.name) ] }}'
-  loop: '{{ docker_cleanup_label_filters }}'
+    docker_cleanup_label_command_filter_flags: '{{ docker_cleanup_label_command_filter_flags + [ ("value" in item) | ternary([item.name, item.equal | default(True) | ternary("=", "!="), item.value | default(omit)] | join(""), item.name) ] }}'
+  loop: '{{ query("list", docker_cleanup_label_filters) }}'
 
 - name: aggregate prune command filters
   set_fact:
-    docker_cleanup_command_filter_flags_vector: '{{ docker_cleanup_command_filter_flags_vector | default([]) + [ "--filter=%s" | format(item | tojson) ] }}'
-  loop: '{{ (docker_cleanup_label_command_filter_flags | default([]) + [docker_cleanup_until_command_filter_flag]) | reject("eq", "") | list }}'
+    docker_cleanup_command_filter_flags_vector: '{{ docker_cleanup_command_filter_flags_vector + [ "--filter=%s" | format(item | tojson) ] }}'
+  loop: '{{ (docker_cleanup_label_command_filter_flags + [docker_cleanup_until_command_filter_flag]) | reject("eq", "") | list }}'
 
 - name: configure docker object (:= {{ docker_cleanup_items | intersect(docker_cleanup_scoped_prune_commands.keys()) }} ) cleanup cron job
   become: yes

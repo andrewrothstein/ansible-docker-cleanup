@@ -18,7 +18,7 @@ docker_cleanup_image_prune_all: True
 
 ### Docker Prune Options
 
-# docker_cleanup_label_filters:
+docker_cleanup_label_filters: []
   # - name: key
   #   equal: False
   #   value: val
