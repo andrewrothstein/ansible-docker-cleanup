@@ -1,10 +1,17 @@
 ---
-docker_cleanup_scripts:
-  - script: docker-rm-exited.sh
-    enabled: "{{ docker_cleanup_rm_exited }}"
-  - script: docker-purge-dangling.sh
-    enabled: "{{ docker_cleanup_purge_dangling }}"
-  - script: docker-volume-purge.sh
-    enabled: "{{ docker_cleanup_volume_purge }}"
-  - script: docker-purge-filtered.sh
-    enabled: "{{ docker_cleanup_image_filter is defined }}"
+docker_cleanup_until_command_filter_flag: '{{ (docker_cleanup_until_filter is defined) | ternary("until=%s" | format(docker_cleanup_until_filter | default(None)), None) }}'
+
+docker_cleanup_scoped_prune_commands:
+  container: 'docker container prune --force {{ docker_cleanup_command_filter_flags_vector | join(" ") }}'
+  image: 'docker image prune --force {{ ((docker_cleanup_image_prune_all | ternary(["--all"], [])) + docker_cleanup_command_filter_flags_vector) | join(" ") }}'
+  network: 'docker network prune --force {{ docker_cleanup_command_filter_flags_vector | join(" ") }}'
+  volume: 'docker volume prune --force {{ docker_cleanup_command_filter_flags_vector | join(" ") }}'
+
+docker_cleanup_system_prune_scopes:
+  - container
+  - image
+  - network
+docker_cleanup_system_prune_command: 'docker system prune --force {{ ((("volume" in docker_cleanup_items) | ternary(["--volumes"], [])) + (docker_cleanup_image_prune_all | ternary(["--all"], [])) + docker_cleanup_command_filter_flags_vector) | join(" ") }}'
+docker_cleanup_scoped_prune_command_vector: '{{ (docker_cleanup_scoped_prune_commands | dict2items | selectattr("key", "in", docker_cleanup_items) | list | items2dict).values() | list }}'
+
+docker_cleanup_crond_job_command: '{{ (docker_cleanup_system_prune_scopes | difference(docker_cleanup_items) | length == 0) | ternary(docker_cleanup_system_prune_command, docker_cleanup_scoped_prune_command_vector | join("; ")) }}' 

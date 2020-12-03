@@ -1,12 +1,43 @@
 ---
-docker_cleanup_install_dir : /usr/local/bin
+docker_cleanup_crontab_schedule:
+  # month:
+  # weekday:
+  # day:
+  # hour:
+  # minute:
 
-docker_cleanup_purge_dangling: True
-docker_cleanup_rm_exited: True
-docker_cleanup_volume_purge: True
+docker_cleanup_crond_enabled: True
 
-# Set the following filter if you would like to delete all images using this filter
-# https://docs.docker.com/engine/reference/commandline/images/#/filtering
-#docker_cleanup_image_filter: 'label=Git.Project.Namespace=test'
+docker_cleanup_items: 
+  - container
+  - image
+  - network
+  - volume
 
-docker_cleanup_activate: True
+docker_cleanup_image_prune_all: True
+
+### Docker Prune Options
+
+# docker_cleanup_label_filters:
+  # - name: key
+  #   equal: False
+  #   value: val
+  # - name: id
+  # - name: secret
+  #   value: token   
+
+## Until Filter Format Options:
+#  * Unix Timestamp
+#    Note: When providing Unix timestamps enter seconds[.nanoseconds], where seconds is the number of seconds that have elapsed since January 1, 1970 (midnight UTC/GMT),
+#          not counting leap seconds (aka Unix epoch or Unix time), and the optional .nanoseconds field is a fraction of a second no more than nine digits long.
+#  * GoLang duration strings (e.g. 10m, 1h30m) computed relative to the daemon machine’s time
+#  * Date formatted timestamps
+#     - RFC3339Nano
+#     - RFC3339
+#     - 2006-01-02T15:04:05
+#     - 2006-01-02T15:04:05.999999999
+#     - 2006-01-02Z07:00
+#     - 2006-01-02
+#    Note: The local timezone on the daemon will be used if you do not provide either a Z or a +-00:00 timezone offset at the end of the timestamp.
+# docker_cleanup_until_filter:
+ 
